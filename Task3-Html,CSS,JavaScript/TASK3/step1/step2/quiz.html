@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Quiz</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .question-count,
+        .score {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            padding: 12px 15px;
+            background: #f9f9f9;
+            border: 2px solid #eee;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option:hover {
+            background: #f0f0f0;
+        }
+
+        .option.selected {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .option.correct {
+            background: #2ecc71;
+            color: white;
+            border-color: #2ecc71;
+        }
+
+        .option.incorrect {
+            background: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        #prev-btn {
+            background: #95a5a6;
+            color: white;
+        }
+
+        #prev-btn:hover {
+            background: #7f8c8d;
+        }
+
+        #next-btn,
+        #submit-btn {
+            background: #3498db;
+            color: white;
+        }
+
+        #next-btn:hover,
+        #submit-btn:hover {
+            background: #2980b9;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result-container {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+
+        .result-container h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .final-score {
+            font-size: 1.5em;
+            margin: 20px 0;
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        #restart-btn {
+            background: #2ecc71;
+            color: white;
+        }
+
+        #restart-btn:hover {
+            background: #27ae60;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .correct-feedback {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .incorrect-feedback {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .progress-container {
+            width: 100%;
+            background: #f0f0f0;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #3498db;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        @media (max-width: 600px) {
+            .quiz-container {
+                padding: 20px;
+            }
+
+            .question {
+                font-size: 1.1em;
+            }
+
+            .option {
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="quiz-container">
+        <h1>JavaScript Knowledge Quiz</h1>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <div class="quiz-header">
+            <div class="question-count" id="question-count">Question 1/10</div>
+            <div class="score" id="score">Score: 0</div>
+        </div>
+
+        <div class="quiz-body">
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+
+        <div class="controls">
+            <button id="prev-btn">Previous</button>
+            <button id="next-btn">Next</button>
+            <button id="submit-btn" style="display: none;">Submit Quiz</button>
+        </div>
+
+        <div class="result-container" id="result-container">
+            <h2>Quiz Completed!</h2>
+            <div class="final-score">Your Score: <span id="final-score">0</span>/10</div>
+            <button id="restart-btn">Restart Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        // Quiz questions data
+        const quizQuestions = [
+            {
+                question: "Which keyword is used to declare a variable in JavaScript?",
+                options: ["var", "let", "const", "All of the above"],
+                answer: "All of the above",
+                explanation: "JavaScript provides three ways to declare variables: var, let, and const."
+            },
+            {
+                question: "What will typeof null return in JavaScript?",
+                options: ["null", "undefined", "object", "string"],
+                answer: "object",
+                explanation: "This is a known quirk in JavaScript - typeof null returns 'object'."
+            },
+            {
+                question: "Which method adds one or more elements to the end of an array?",
+                options: ["push()", "pop()", "shift()", "unshift()"],
+                answer: "push()",
+                explanation: "The push() method adds elements to the end of an array."
+            },
+            {
+                question: "What does the '===' operator check for?",
+                options: ["Value equality", "Type equality", "Both value and type equality", "Reference equality"],
+                answer: "Both value and type equality",
+                explanation: "The strict equality operator '===' checks both value and type."
+            },
+            {
+                question: "Which of these is NOT a JavaScript framework?",
+                options: ["React", "Angular", "Vue", "Django"],
+                answer: "Django",
+                explanation: "Django is a Python web framework, not a JavaScript framework."
+            },
+            {
+                question: "What does the 'this' keyword refer to in a JavaScript method?",
+                options: ["The function itself", "The global object", "The object the method belongs to", "The parent object"],
+                answer: "The object the method belongs to",
+                explanation: "In a method, 'this' refers to the object that owns the method."
+            },
+            {
+                question: "Which function is used to parse a string to an integer?",
+                options: ["parseInt()", "parseFloat()", "Number()", "All of the above"],
+                answer: "All of the above",
+                explanation: "All these functions can parse strings to numbers, with parseInt() specifically for integers."
+            },
+            {
+                question: "What is the purpose of the 'use strict' directive?",
+                options: ["To enforce stricter type checking", "To enable modern JavaScript features", "To enforce better coding practices", "To make JavaScript run faster"],
+                answer: "To enforce better coding practices",
+                explanation: "'use strict' enables strict mode which catches common coding mistakes."
+            },
+            {
+                question: "Which of these is NOT a JavaScript data type?",
+                options: ["boolean", "number", "character", "symbol"],
+                answer: "character",
+                explanation: "JavaScript doesn't have a separate 'character' type - it uses strings."
+            },
+            {
+                question: "What does the Array.map() method do?",
+                options: ["Creates a new array with transformed elements", "Filters array elements", "Reduces the array to a single value", "Sorts the array"],
+                answer: "Creates a new array with transformed elements",
+                explanation: "map() creates a new array by applying a function to each element."
+            }
+        ];
+
+        // DOM elements
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const feedbackElement = document.getElementById('feedback');
+        const questionCountElement = document.getElementById('question-count');
+        const scoreElement = document.getElementById('score');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const resultContainer = document.getElementById('result-container');
+        const finalScoreElement = document.getElementById('final-score');
+        const progressBar = document.getElementById('progress-bar');
+
+        // Quiz state
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = Array(quizQuestions.length).fill(null);
+        let answered = Array(quizQuestions.length).fill(false);
+
+        // Initialize the quiz
+        function initQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = Array(quizQuestions.length).fill(null);
+            answered = Array(quizQuestions.length).fill(false);
+
+            resultContainer.style.display = 'none';
+            document.querySelector('.quiz-body').style.display = 'block';
+            document.querySelector('.controls').style.display = 'flex';
+
+            loadQuestion();
+            updateScore();
+            updateProgressBar();
+        }
+
+        // Load the current question
+        function loadQuestion() {
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+
+            // Update question count
+            questionCountElement.textContent = `Question ${currentQuestionIndex + 1}/${quizQuestions.length}`;
+
+            // Set question text
+            questionElement.textContent = currentQuestion.question;
+
+            // Clear previous options
+            optionsElement.innerHTML = '';
+
+            // Clear feedback
+            feedbackElement.textContent = '';
+            feedbackElement.className = 'feedback';
+            feedbackElement.style.display = 'none';
+
+            // Create option buttons
+            currentQuestion.options.forEach((option, index) => {
+                const optionButton = document.createElement('div');
+                optionButton.className = 'option';
+                optionButton.textContent = option;
+
+                // Highlight if this option was previously selected
+                if (userAnswers[currentQuestionIndex] === option) {
+                    optionButton.classList.add('selected');
+                }
+
+                optionButton.addEventListener('click', () => selectOption(optionButton, option));
+                optionsElement.appendChild(optionButton);
+            });
+
+            // Update button states
+            prevBtn.disabled = currentQuestionIndex === 0;
+
+            if (currentQuestionIndex === quizQuestions.length - 1) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+                submitBtn.disabled = !answered[currentQuestionIndex];
+            } else {
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+                nextBtn.disabled = !answered[currentQuestionIndex];
+            }
+        }
+
+        // Handle option selection
+        function selectOption(optionElement, option) {
+            // Remove selected class from all options
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+
+            // Add selected class to clicked option
+            optionElement.classList.add('selected');
+
+            // Store user's answer
+            userAnswers[currentQuestionIndex] = option;
+
+            // Check if answer is correct
+            const isCorrect = option === quizQuestions[currentQuestionIndex].answer;
+
+            // Show feedback
+            showFeedback(isCorrect);
+
+            // Mark question as answered
+            answered[currentQuestionIndex] = true;
+
+            // Enable next/submit button
+            if (currentQuestionIndex === quizQuestions.length - 1) {
+                submitBtn.disabled = false;
+            } else {
+                nextBtn.disabled = false;
+            }
+
+            // Update score if not previously answered
+            if (!answered[currentQuestionIndex]) {
+                if (isCorrect) {
+                    score++;
+                    updateScore();
+                }
+            }
+        }
+
+        // Show feedback for selected answer
+        function showFeedback(isCorrect) {
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+
+            feedbackElement.textContent = isCorrect
+                ? `✓ Correct! ${currentQuestion.explanation}`
+                : `✗ Incorrect. ${currentQuestion.explanation}`;
+
+            feedbackElement.className = isCorrect ? 'feedback correct-feedback' : 'feedback incorrect-feedback';
+            feedbackElement.style.display = 'block';
+
+            // Highlight correct answer if wrong was selected
+            if (!isCorrect) {
+                document.querySelectorAll('.option').forEach(opt => {
+                    if (opt.textContent === currentQuestion.answer) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+        }
+
+        // Update score display
+        function updateScore() {
+            scoreElement.textContent = `Score: ${score}`;
+        }
+
+        // Update progress bar
+        function updateProgressBar() {
+            const progress = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // Show final results
+        function showResults() {
+            document.querySelector('.quiz-body').style.display = 'none';
+            document.querySelector('.controls').style.display = 'none';
+            resultContainer.style.display = 'block';
+            finalScoreElement.textContent = score;
+        }
+
+        // Event listeners
+        nextBtn.addEventListener('click', () => {
+            currentQuestionIndex++;
+            loadQuestion();
+            updateProgressBar();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentQuestionIndex--;
+            loadQuestion();
+            updateProgressBar();
+        });
+
+        submitBtn.addEventListener('click', () => {
+            showResults();
+        });
+
+        restartBtn.addEventListener('click', () => {
+            initQuiz();
+        });
+
+        // Start the quiz
+        initQuiz();
+    </script>
+</body>
+
+</html>
