@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Title | Blog</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="/" class="logo">Blog</a>
+            <nav class="nav">
+                <button class="menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-list">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Categories</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main post-page">
+        <div class="container">
+            <article class="post-full" id="post-content">
+                <!-- Post will be loaded here by JavaScript -->
+            </article>
+
+            <section class="comments-section">
+                <h2>Comments</h2>
+                <div class="comments-list" id="comments-container">
+                    <!-- Comments will be loaded here -->
+                </div>
+                <form class="comment-form">
+                    <h3>Leave a Comment</h3>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="comment">Comment</label>
+                        <textarea id="comment" rows="5" required></textarea>
+                    </div>
+                    <button type="submit">Post Comment</button>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <!-- Same as index.html -->
+    </footer>
+
+    <script src="assets/js/main.js" defer></script>
+    <script src="assets/js/post.js" defer></script>
+</body>
+
+</html>

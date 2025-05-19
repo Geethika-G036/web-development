@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A personal blog about web development and design">
+    <title>Blog | Web Development Blog</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="preload" href="assets/css/style.css" as="style">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="/" class="logo">Blog</a>
+            <nav class="nav">
+                <button class="menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-list">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Categories</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <section class="featured-post">
+                <article class="post-card large">
+                    <div class="post-image">
+                        <img src="assets/images/featured-post.jpg" alt="Featured post" loading="lazy">
+                    </div>
+                    <div class="post-content">
+                        <span class="post-category">Featured</span>
+                        <h2><a href="post.html?id=1">Getting Started with Modern JavaScript</a></h2>
+                        <p class="post-excerpt">Learn the fundamentals of modern JavaScript and how to apply them in
+                            your projects.</p>
+                        <div class="post-meta">
+                            <span class="post-date">May 15, 2025</span>
+                            <span class="post-read-time">5 min read</span>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="recent-posts">
+                <h2 class="section-title">Recent Posts</h2>
+                <div class="posts-grid" id="posts-container">
+                    <!-- Posts will be loaded here by JavaScript -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <h3>About Blog</h3>
+                    <p>A blog about web development, design, and everything in between.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-subscribe">
+                    <h3>Subscribe</h3>
+                    <form class="subscribe-form">
+                        <input type="email" placeholder="Your email" required>
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Blog. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js" defer></script>
+</body>
+
+</html>
